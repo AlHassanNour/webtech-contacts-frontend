@@ -6,19 +6,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contacts</a>
-          </li>
-          <li class="nav-item">
-          </li>
-        </ul>
+        <div class="navbar-nav">
+          <router-link class="nav-link" to="/">Home</router-link>
+          <router-link class="nav-link" to ="/about">About</router-link>
+          <router-link class="nav-link" to="/contacts">Contacts</router-link>
+        </div>
       </div>
     </div>
   </nav>
