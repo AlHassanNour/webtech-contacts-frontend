@@ -39,13 +39,12 @@ export default {
           secondName: 'Müller',
           work: 'student',
           email: ' test32@gmail.com',
-          phone: '04783746',
+          phone: '84498',
           gender: 'FEMALE'
         }
       ]
     }
   },
-
   methods: {
     getAvatar (contact) {
       if (contact.gender === 'MALE') {
