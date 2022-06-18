@@ -23,26 +23,7 @@ export default {
   name: 'Contacts',
   data () {
     return {
-      contacts: [
-        {
-          id: 1,
-          firstName: 'Max',
-          secondName: 'Mustermann',
-          work: 'student',
-          email: ' test22@gmail.com',
-          phone: '018278739',
-          gender: 'MALE'
-        },
-        {
-          id: 2,
-          firstName: 'Lisa',
-          secondName: 'Müller',
-          work: 'student',
-          email: ' test32@gmail.com',
-          phone: '84498',
-          gender: 'FEMALE'
-        }
-      ]
+      contacts: []
     }
   },
   methods: {
@@ -53,6 +34,20 @@ export default {
         return require('../assets/FEMALE.png')
       }
     }
+  },
+  mounted () {
+    const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/contacts'
+    const requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    }
+
+    fetch(endpoint, requestOptions)
+      .then(response => response.json())
+      .then(result => result.forEach(contact => {
+        this.contacts.push(contact)
+      }))
+      .catch(error => console.log('error', error))
   }
 }
 </script>
