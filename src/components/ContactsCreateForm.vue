@@ -35,17 +35,11 @@
       </div>
       <div class="mb-3">
         <label for="work" class="form-label"> Work</label>
-        <input type="text" class="form-control" id="work" v-model="work" required>
-        <div class="invalid-feedback">
-          Please provide the work.
-        </div>
+        <input type="text" class="form-control" id="work" v-model="work">
       </div>
     <div class="mb-3">
       <label for="email" class="form-label"> E-Mail</label>
-      <input type="text" class="form-control" id="email" v-model="email" required>
-      <div class="invalid-feedback">
-        Please provide the email.
-      </div>
+      <input type="text" class="form-control" id="email" v-model="email">
     </div>
     <div class="mb-3">
       <label for="gender" class="form-label">Gender</label>
@@ -78,33 +72,52 @@ export default {
       gender: '',
       email: '',
       work: '',
-      phoneNumber: ''
+      phone: ''
     }
   },
   methods: {
     createContact: function () {
-      const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/contacts'
-      const headers = new Headers()
-      headers.append('Content-Type', 'application/json')
+      const valid = this.validate()
+      if (valid) {
+        const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/contacts'
+        const headers = new Headers()
+        headers.append('Content-Type', 'application/json')
 
-      const payload = JSON.stringify({
-        firstName: this.firstName,
-        secondName: this.secondName,
-        gender: this.gender,
-        email: this.email,
-        work: this.work,
-        phone: this.phone
-      })
-
-      const requestOptions = {
-        method: 'POST',
-        headers: headers,
-        body: payload,
-        redirect: 'follow'
+        const payload = JSON.stringify({
+          firstName: this.firstName,
+          secondName: this.secondName,
+          gender: this.gender,
+          email: this.email,
+          work: this.work,
+          phone: this.phone
+        })
+        const requestOptions = {
+          method: 'POST',
+          headers: headers,
+          body: payload,
+          redirect: 'follow'
+        }
+        fetch(endpoint, requestOptions)
+          .catch(error => console.log('error', error))
       }
+    },
 
-      fetch(endpoint, requestOptions)
-        .catch(error => console.log('error', error))
+    validate () {
+      let valid = true
+      var forms = document.querySelectorAll('.needs-validation')
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            valid = false
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+      return valid
     }
   }
 }
