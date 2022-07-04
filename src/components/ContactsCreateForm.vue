@@ -39,7 +39,7 @@
       </div>
     <div class="mb-3">
       <label for="email" class="form-label"> E-Mail</label>
-      <input type="text" class="form-control" id="email" v-model="email">
+      <input type="email" class="form-control" id="email" v-model="email">
     </div>
     <div class="mb-3">
       <label for="gender" class="form-label">Gender</label>
@@ -53,16 +53,23 @@
         Please select a valid gender.
       </div>
     </div>
+    <div v-if="this.serverValidationMessages">
+      <ul>
+        <li v-for="(message,index) in serverValidationMessages" :key="index" style="color: #ff0000">
+          {{ message }}
+        </li>
+      </ul>
+    </div>
     <div class="mt-5">
-      <button class="btn btn-primary me-3" type="submit" @click="createContact">Create</button>
+      <button class="btn btn-primary me-3" type="submit" @click.prevent="createContact">Create</button>
       <button class="btn btn-danger" type="reset">Reset</button>
     </div>
   </form>
     </div>
   </div>
 </template>
-<script>
 
+<script>
 export default {
   name: 'ContactsCreateForm',
   data () {
@@ -72,18 +79,19 @@ export default {
       gender: '',
       email: '',
       work: '',
-      phone: ''
+      phone: '',
+      serverValidationMessages: []
     }
   },
+  emits: ['created'],
   methods: {
-    createContact: function () {
-      const valid = this.validate()
-      if (valid) {
+    async createContact () {
+      if (this.validate()) {
         const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/contacts'
         const headers = new Headers()
         headers.append('Content-Type', 'application/json')
 
-        const payload = JSON.stringify({
+        const contact = JSON.stringify({
           firstName: this.firstName,
           secondName: this.secondName,
           gender: this.gender,
@@ -94,30 +102,31 @@ export default {
         const requestOptions = {
           method: 'POST',
           headers: headers,
-          body: payload,
+          body: contact,
           redirect: 'follow'
         }
-        fetch(endpoint, requestOptions)
-          .catch(error => console.log('error', error))
+        const response = await fetch(endpoint, requestOptions)
+        await this.handleResponse(response)
+      }
+    },
+    async handleResponse (response) {
+      if (response.ok) {
+        this.$emit('created', response.headers.get('location'))
+        document.getElementById('close-offcanvas').click()
+      } else if (response.status === 400) {
+        response = await response.json()
+        response.errors.forEach(error => {
+          this.serverValidationMessages.push(error.defaultMessage)
+        })
+      } else {
+        this.serverValidationMessages.push('Unknown error occurred')
       }
     },
 
     validate () {
-      let valid = true
-      var forms = document.querySelectorAll('.needs-validation')
-      // Loop over them and prevent submission
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            valid = false
-            event.preventDefault()
-            event.stopPropagation()
-          }
-
-          form.classList.add('was-validated')
-        }, false)
-      })
-      return valid
+      const form = document.getElementById('contacts-create-form')
+      form.classList.add('was-validated')
+      return form.checkValidity()
     }
   }
 }
