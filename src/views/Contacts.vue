@@ -4,15 +4,18 @@
     <contact-card-list :contacts="this.contacts"></contact-card-list>
   </div>
   <ContactsCreateForm></ContactsCreateForm>
+  <contacts-update-form></contacts-update-form>
 </template>
 
 <script>
 import ContactCardList from '@/components/ContactCardList'
 import ContactsCreateForm from '@/components/ContactsCreateForm'
+import ContactsUpdateForm from '@/components/ContactsUpdateForm'
 export default {
   // eslint-disable-next-line
   name: 'Contacts',
   components: {
+    ContactsUpdateForm,
     ContactCardList,
     ContactsCreateForm
   },
