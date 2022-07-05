@@ -3,7 +3,7 @@
   <div class="container-fluid" >
     <contact-card-list :contacts="this.contacts"></contact-card-list>
   </div>
-  <ContactsCreateForm></ContactsCreateForm>
+  <contacts-create-form @created="addContact"></contacts-create-form>
   <contacts-update-form></contacts-update-form>
 </template>
 
@@ -19,20 +19,33 @@ export default {
     ContactCardList,
     ContactsCreateForm
   },
+  /* eslint-disable */
   data () {
     return {
       contacts: []
     }
-  },
-  methods: {
+    },
+  /* methods: {
     getAvatar (contact) {
       if (contact.gender === 'MALE') {
         return require('../assets/MALE.png')
       } else if (contact.gender === 'FEMALE') {
         return require('../assets/FEMALE.png')
       }
-    }
-  },
+    },*/
+    methods: {
+      addContact (contactLocation) {
+        const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + contactLocation
+        const requestOptions = {
+          method: 'GET',
+          redirect: 'follow'
+        }
+        fetch(endpoint, requestOptions)
+          .then(response => response.json())
+          .then(person => this.contacts.push(person))
+          .catch(error => console.log('error', error))
+      }
+      },
   mounted () {
     const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/contacts'
     const requestOptions = {
