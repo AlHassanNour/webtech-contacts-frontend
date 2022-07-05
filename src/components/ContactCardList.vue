@@ -3,7 +3,6 @@
       <div v-if="this.message" >
             {{ message }}
       </div>
-
       <div  v-for="contact in contacts" :key="contact.id">
         <section>
           <div class="card-container">
@@ -18,7 +17,7 @@
          <p class="name">{{contact.firstName}} {{contact.secondName}}</p>
 
       </span>
-      <p class="city">{{contact.work}}</p>
+      <p class="work">{{contact.work}}</p>
     </span>
             <div class="number-data">
     <span>
@@ -47,7 +46,6 @@
   <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
 </svg>
                   Delete</button>
-
            </div>
           </div>
         </section>
